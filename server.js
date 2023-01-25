@@ -24,5 +24,14 @@ const server = http.createServer((request, response) => {
     response.write(JSON.stringify(data));
     response.end();
   }
-
+  else if (request.method == 'POST' && request.url == '/tasks') {
+    let body = '';
+    console.log('Post request.');
+    request.on('data', (entry) => body += entry.toString());
+    request.on('end', () => {
+      data.push(JSON.parse(body));
+      response.writeHead(200, { 'Content-Type': 'application/json' });
+      response.end(JSON.stringify(data));
+    });
+  }
 }); server.listen(PORT, () => console.log('ToDo Server')); 
