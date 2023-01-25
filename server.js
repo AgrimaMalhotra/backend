@@ -44,17 +44,21 @@ const server = http.createServer((request, response) => {
     response.writeHead(200, { 'Content-Type': 'application/json' });
     response.end(JSON.stringify(data));
   }
-  // else if (request.method == 'POST' && request.url == '/tasks') {
-  //   let body = '';
-  //   console.log('Post request.');
-  //   request.on('data', (entry) => body += entry.toString());
-  //   request.on('end', () => {
-  //     data.push(JSON.parse(body));
-  //     response.writeHead(200, { 'Content-Type': 'application/json' });
-  //     response.end(JSON.stringify(data));
-  //   });
-  // }
-  // else if (request.method == 'POST' && request.url == '/tasks') {
+  else if (request.method == 'PUT' && request.url.indexOf('/tasks') != -1) {
+    const id = request.url.split('/')[2];
+    let body = '';
+    console.log(`Put request.`);
+    request.on('data', (entry) => body += entry.toString());
+    request.on('end', () => {
+      data.forEach((obj, index) => {
+        if (obj.id == id)
+          data[index] = JSON.parse(body);
+      })
+      response.writeHead(200, { 'Content-Type': 'application/json' });
+      response.end(JSON.stringify(data));
+    });
+  }
+  // else if (request.method == 'POST' && request.url.indexOf('/tasks') != -1) {
   //   let body = '';
   //   console.log('Post request.');
   //   request.on('data', (entry) => body += entry.toString());
